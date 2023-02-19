@@ -1,0 +1,23 @@
+name: ca-certificates.crt
+
+on:
+  push:
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  cmp:
+    uses: WaterLemons2k/.github/.github/workflows/compare.yml@main
+    with:
+      new: $(sudo apt-get install ca-certificates | grep ubuntu | awk -F '[(u]' '{print $2}')
+      
+  git:
+    needs: cmp
+    if: needs.cmp.outputs.changed == 'true'
+    uses: WaterLemons2k/.github/.github/workflows/git.yml@main
+    with:
+      run: |
+        cp /etc/ssl/certs/ca-certificates.crt .
+        sed -i "3c Version: ${{ needs.cmp.outputs.version }}" README.md
+        echo "${{ needs.cmp.outputs.version }}" > VERSION
+      commit_message: "feat: bump ca-certificates.crt to ${{ needs.cmp.outputs.version }}"
