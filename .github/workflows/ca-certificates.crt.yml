@@ -10,7 +10,12 @@ jobs:
     uses: WaterLemons2k/.github/.github/workflows/compare.yml@main
     with:
       new: $(sudo apt-get install ca-certificates | grep ubuntu | awk -F '[(u]' '{print $2}')
-      
+
+  keep-scheduled-workflow-activity:
+    needs: cmp
+    if: needs.cmp.outputs.changed == 'false'
+    uses: WaterLemons2k/scheduled-workflow-activity-action/.github/workflows/reusable.yml@v1
+
   git:
     needs: cmp
     if: needs.cmp.outputs.changed == 'true'
