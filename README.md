@@ -1,5 +1,5 @@
 # ca-certificates.crt
 CA certificates file  
-Version: 20230311
+Version: 
 
 [ca-certificates.crt](ca-certificates.crt)
