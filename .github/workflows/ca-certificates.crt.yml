@@ -9,7 +9,10 @@ jobs:
   cmp:
     uses: WaterLemons2k/.github/.github/workflows/compare.yml@main
     with:
-      new: $(sudo apt-get install ca-certificates | grep ubuntu | awk -F '[(u]' '{print $2}')
+      pre: |
+        echo 'deb [trusted=yes] http://deb.debian.org/debian/ testing main' | sudo tee /etc/apt/sources.list
+        sudo apt-get update
+      new: $(sudo apt-get install ca-certificates | awk '/G/ {print $7}')
 
   keep-scheduled-workflow-activity:
     needs: cmp
