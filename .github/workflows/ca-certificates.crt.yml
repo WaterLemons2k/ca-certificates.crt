@@ -26,8 +26,8 @@ jobs:
     if: needs.cmp.outputs.changed == 'true'
     uses: WaterLemons2k/.github/.github/workflows/git.yml@main
     with:
+      artifact-name: crt
       run: |
-        GH_TOKEN='${{ github.token }}' gh run download crt
         sed -i "3c Version: ${{ needs.cmp.outputs.version }}" README.md
         echo "${{ needs.cmp.outputs.version }}" > VERSION
       commit_message: 'feat: bump ca-certificates.crt to ${{ needs.cmp.outputs.version }}'
