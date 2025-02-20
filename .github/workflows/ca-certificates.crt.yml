@@ -13,6 +13,8 @@ jobs:
         echo 'deb [trusted=yes] http://deb.debian.org/debian/ testing main' | sudo tee /etc/apt/sources.list
         sudo apt-get update
       new: $(sudo apt-get install ca-certificates | awk '/G/ {print $7}')
+      artifact-name: crt
+      artifact-path: /etc/ssl/certs/ca-certificates.crt
 
   keep-scheduled-workflow-activity:
     needs: cmp
@@ -25,7 +27,7 @@ jobs:
     uses: WaterLemons2k/.github/.github/workflows/git.yml@main
     with:
       run: |
-        cp /etc/ssl/certs/ca-certificates.crt .
+        gh run download crt
         sed -i "3c Version: ${{ needs.cmp.outputs.version }}" README.md
         echo "${{ needs.cmp.outputs.version }}" > VERSION
       commit_message: "feat: bump ca-certificates.crt to ${{ needs.cmp.outputs.version }}"
